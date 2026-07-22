@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SangSang Scraper Pro - Cào Đề Thi ĐGNL Tự Động (Gộp Chung & Cào Hàng Loạt File TXT)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\\\(', '\\\\)'], ['$', '$']],
+        displayMath: [['\\\\[', '\\\\]'], ['$$', '$$']]
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo-box">
+        <span class="logo-icon">⚡</span>
+        <div>
+          <h1>SangSang Scraper Pro</h1>
+          <p class="subtitle">Công cụ tự động cào 120 câu hỏi + Biểu thức Toán LaTeX + Hình ảnh + Lọc trùng lặp + Cào Hàng Loạt từ file urls.txt</p>
+        </div>
+      </div>
+    </header>
+
+    <!-- Mode Selector Tabs -->
+    <div class="mode-tabs">
+      <button class="mode-btn active" id="singleModeBtn">🔗 Cào 1 Link Đơn</button>
+      <button class="mode-btn" id="batchModeBtn">📋 Cào Hàng Loạt (File urls.txt hoặc Nhiều Link)</button>
+    </div>
+
+    <!-- Single Link Input Section -->
+    <section id="singleInputCard" class="card input-card">
+      <h2 class="card-title">🔗 Nhập liên kết đề thi cần cào</h2>
+      <p class="card-desc">Dán đường dẫn bất kỳ từ dolthpt.vn (ví dụ: Mã đề 30, Mã đề 27, Mã đề 11):</p>
+      
+      <div class="input-group">
+        <input 
+          type="url" 
+          id="targetUrl" 
+          placeholder="https://dolthpt.vn/dgnl-va-dgtd/dap-an-va-giai-thich-de-on-tap-dgnl-dhqg-tp-hcm-nam-2025-ma-de-30"
+          value="https://dolthpt.vn/dgnl-va-dgtd/dap-an-va-giai-thich-de-on-tap-dgnl-dhqg-tp-hcm-nam-2025-ma-de-30"
+        />
+        <button id="startBtn" class="btn btn-primary">
+          <span class="btn-icon">🚀</span> Bắt đầu cào ngay
+        </button>
+      </div>
+
+      <div class="presets">
+        <span class="preset-label">📌 Đề mẫu thử nhanh:</span>
+        <button class="btn-preset" data-url="https://dolthpt.vn/dgnl-va-dgtd/dap-an-va-giai-thich-de-on-tap-dgnl-dhqg-tp-hcm-nam-2025-ma-de-30">Mã đề 30 (2025)</button>
+        <button class="btn-preset" data-url="https://dolthpt.vn/dgnl-va-dgtd/dap-an-va-giai-thich-de-on-tap-dgnl-dhqg-tp-hcm-nam-2025-ma-de-27">Mã đề 27 (2025)</button>
+      </div>
+    </section>
+
+    <!-- Batch Input Section -->
+    <section id="batchInputCard" class="card input-card hidden">
+      <h2 class="card-title">📋 Cào Hàng Loạt Từ File TXT Hoặc Danh Sách Link</h2>
+      <p class="card-desc">Tải lên tập tin <code>urls.txt</code> hoặc dán nhiều đường dẫn (mỗi đường dẫn nằm trên 1 dòng):</p>
+      
+      <div class="file-upload-box">
+        <label for="txtFileInput" class="file-upload-label">
+          📁 <strong>Tải file urls.txt từ máy tính</strong>
+        </label>
+        <input type="file" id="txtFileInput" accept=".txt" class="hidden-file-input">
+        <span id="fileNameDisplay" class="file-name-display">Chưa chọn file nào</span>
+      </div>
+
+      <textarea 
+        id="batchUrlsInput" 
+        rows="5" 
+        class="batch-textarea"
+        placeholder="https://dolthpt.vn/dgnl-va-dgtd/dap-an-va-giai-thich-de-on-tap-dgnl-dhqg-tp-hcm-nam-2025-ma-de-30&#10;https://dolthpt.vn/dgnl-va-dgtd/dap-an-va-giai-thich-de-on-tap-dgnl-dhqg-tp-hcm-nam-2025-ma-de-27"
+      >https://dolthpt.vn/dgnl-va-dgtd/dap-an-va-giai-thich-de-on-tap-dgnl-dhqg-tp-hcm-nam-2025-ma-de-30
+https://dolthpt.vn/dgnl-va-dgtd/dap-an-va-giai-thich-de-on-tap-dgnl-dhqg-tp-hcm-nam-2025-ma-de-27</textarea>
+
+      <div class="batch-action">
+        <button id="startBatchBtn" class="btn btn-primary">
+          <span class="btn-icon">⚡</span> Cào Hàng Loạt Ngay
+        </button>
+      </div>
+    </section>
+
+    <!-- Progress & Live Log Section -->
+    <section id="progressSection" class="card progress-card hidden">
+      <div class="progress-header">
+        <h3>🔄 Tiến trình cào dữ liệu live</h3>
+        <span id="statusBadge" class="status-badge badge-running">Đang chạy...</span>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-box">
+          <span class="stat-label">Số câu đã cào</span>
+          <span id="countStat" class="stat-value">0 / 120</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-label">Tiến độ phần trăm</span>
+          <span id="percentStat" class="stat-value">0%</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-label">Trạng thái</span>
+          <span id="statusStat" class="stat-value">Đang kết nối...</span>
+        </div>
+      </div>
+
+      <div class="progress-bar-bg">
+        <div id="progressBar" class="progress-bar-fill" style="width: 0%"></div>
+      </div>
+
+      <div class="console-box">
+        <div class="console-header">💻 Nhật ký hệ thống (Console Logs)</div>
+        <pre id="logConsole" class="console-content"></pre>
+      </div>
+    </section>
+
+    <!-- Export & Results Section -->
+    <section id="resultSection" class="card result-card hidden">
+      <div class="result-header">
+        <h2>🎉 Cào hoàn tất! Xuất dữ liệu trọn bộ</h2>
+        <p id="resultMeta"></p>
+      </div>
+
+      <!-- Export Toolbar -->
+      <div class="export-toolbar">
+        <span class="toolbar-title">📥 Tải tập tin gộp chung (Đầy đủ 120 Câu hỏi + Hình ảnh + Toán LaTeX + Lời giải + Đã lọc sạch trùng):</span>
+        <div class="export-btns">
+          <button class="btn-download btn-pdf" onclick="downloadFile('pdf')">
+            📄 File PDF In Ấn (.pdf)
+          </button>
+          <button class="btn-download btn-txt" onclick="downloadFile('full-txt')">
+            📄 File TXT Gộp Chung (.txt)
+          </button>
+          <button class="btn-download btn-md" onclick="downloadFile('full-md')">
+            📄 File Markdown Gộp (.md)
+          </button>
+          <button class="btn-download btn-json" onclick="downloadFile('json')">
+            📊 File JSON Full (.json)
+          </button>
+          <button class="btn-download btn-html" onclick="downloadFile('html')">
+            🌐 Web Tương Tác (.html)
+          </button>
+        </div>
+      </div>
+
+      <!-- Preview Tabs -->
+      <div class="preview-tabs">
+        <button class="tab-btn active" data-tab="tab-full">📚 Xem trước Trọn Bộ (Đã trình bày căn chỉnh đẹp)</button>
+        <button class="tab-btn" data-tab="tab-json">📊 Raw JSON Data</button>
+      </div>
+
+      <div class="tab-content">
+        <div id="tab-full" class="tab-pane active">
+          <div id="fullPreview" class="preview-box"></div>
+        </div>
+        <div id="tab-json" class="tab-pane">
+          <pre id="jsonPreview" class="json-box"></pre>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

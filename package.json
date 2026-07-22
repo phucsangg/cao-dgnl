@@ -1,0 +1,22 @@
+{
+  "name": "cao-dgnl-scraper",
+  "version": "1.0.0",
+  "description": "Tool cào câu hỏi, đáp án và giải thích chi tiết đề ôn tập ĐGNL từ dolthpt.vn",
+  "type": "module",
+  "main": "dgnl-scraper.js",
+  "scripts": {
+    "start": "node server.js",
+    "scrape": "node dgnl-scraper.js"
+  },
+  "keywords": [
+    "dgnl",
+    "scraper",
+    "dolthpt"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.2.1",
+    "puppeteer-core": "^25.3.0"
+  }
+}

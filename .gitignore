@@ -1,0 +1,4 @@
+node_modules/
+output/job_*
+.DS_Store
+*.log

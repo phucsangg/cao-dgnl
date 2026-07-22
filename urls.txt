@@ -1,0 +1,3 @@
+# Danh sách các đường dẫn đề thi cần cào (Mỗi dòng 1 đường dẫn URL)
+https://dolthpt.vn/dgnl-va-dgtd/dap-an-va-giai-thich-de-on-tap-dgnl-dhqg-tp-hcm-nam-2025-ma-de-30
+https://dolthpt.vn/dgnl-va-dgtd/dap-an-va-giai-thich-de-on-tap-dgnl-dhqg-tp-hcm-nam-2025-ma-de-27
