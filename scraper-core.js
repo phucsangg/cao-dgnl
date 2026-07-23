@@ -449,6 +449,7 @@ export async function scrapeDolExam(targetUrl, onLog) {
             if (label && optionText && ['A','B','C','D'].includes(label)) {
               choices.push(`${label}. ${optionText}`);
             }
+            choice.remove();
           });
         }
 
@@ -508,6 +509,21 @@ export async function scrapeDolExam(targetUrl, onLog) {
     let cleanQuestion = formatTextSpacing(rawData.questionText);
     const cleanChoices = (rawData.choices || []).map(c => formatTextSpacing(c));
     const cleanExplanation = formatTextSpacing(rawData.explanationText);
+
+    // Strip any trailing duplicated choice text from cleanQuestion (e.g. "AVùng văn hóa..." or "A. Vùng...")
+    if (cleanQuestion && cleanChoices.length > 0) {
+      const firstChoiceRaw = cleanChoices[0].replace(/^A\.\s*/, '').trim();
+      if (firstChoiceRaw && firstChoiceRaw.length > 2) {
+        const patterns = [`A. ${firstChoiceRaw}`, `A.${firstChoiceRaw}`, `A ${firstChoiceRaw}`, `A${firstChoiceRaw}`];
+        for (const pat of patterns) {
+          const idx = cleanQuestion.lastIndexOf(pat);
+          if (idx > 5) {
+            cleanQuestion = cleanQuestion.substring(0, idx).trim();
+            break;
+          }
+        }
+      }
+    }
 
     // If questionText is empty but passageText is present, swap if appropriate or use non-empty text
     if (!cleanQuestion && cleanChoices.length > 0 && cleanPassage) {
